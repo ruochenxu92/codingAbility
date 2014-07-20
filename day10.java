@@ -6,10 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-
-
 public class day10 {
-	
 	
 	
 	
@@ -21,9 +18,12 @@ public class day10 {
 		head.next.next.next = new ListNode(2);
 		head.next.next.next.next  = new ListNode(1);
 		ListNode res = sortList(head);
-		
+		ListNode curr = res;
+		for(;curr != null; ){
+			System.out.println(curr.val + ",");
+			curr = curr.next;
+		}
 	}
-	
 	
 	//Time O(nlgn), Space O(1)
 	public ListNode sortList(ListNode head) {
@@ -60,13 +60,29 @@ public class day10 {
         return merge(A,B);        
     }
     
+	
+	
+	
+	@Test
+	public void testmerge(){
+		ListNode A = new ListNode(1);
+		A.next = new ListNode(2);
+		ListNode B = new ListNode(3);
+		B.next = new ListNode(4);
+		ListNode res = merge(A,B);
+		ListNode curr = res;
+		for(;curr!=null;){
+			System.out.print(curr.val + ",");
+			curr = curr.next;
+		}
+	}
     
     public ListNode merge(ListNode A, ListNode B){
         ListNode newhead = null;
         ListNode newNode = null;
         ListNode tail = null;
         while(A != null || B != null){
-            if( A!=null || B != null){
+            if( A!=null && B != null){
                 if(A.val < B.val){
                     newNode = A;
                     A = A.next;
@@ -77,14 +93,15 @@ public class day10 {
                     newNode.next = null;
                 }
             }else if( A!= null){
-                newNode = A;
-                A = A.next;
-                newNode.next = null;
+            	newNode = A;
+            	A = A.next;
+            	newNode.next = null;
             }else{
-                newNode = B;
-                B = B.next;
-                newNode.next = null;
+            	newNode = B;
+            	B = B.next;
+            	newNode.next = null;
             }
+            
             
             if(newhead == null){
                 newhead = tail = newNode;
