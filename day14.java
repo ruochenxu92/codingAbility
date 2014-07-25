@@ -17,17 +17,18 @@ import org.junit.Test;
 public class day14 {
 	
 	
-	
-//    public ArrayList<String[]> solveNQueens(int n){
-//    	ArrayList<String[]> result = new ArrayList();
-//    	String[] rows = new String[n];
-//    	
-//    	solutions(0, n, rows, result);
-//    	
-//    	
-//    	
-//    	
-//    }
+    public ArrayList<String[]> solveNQueens(int n){
+    	ArrayList<String[]> result = new ArrayList();
+    	String[] rows = new String[n];
+    	if (n<1){
+    		return result;
+    	}
+          
+    	solutions(0, n, rows, result);
+    	
+    	return result;
+    }
+    
 	
     private void solutions(int stRow, int n,String[] rows, ArrayList<String[]> result ){
     	if(stRow == n){
@@ -50,14 +51,27 @@ public class day14 {
             solutions(stRow+1, n, rows, result);
             
         }
-    	
     }
     
     public boolean isValid(int col, int stRow, String[] rows){
     	
+    	for(int i =0; i < stRow; i++){
+    		String row = rows[i];
+    		
+    		int Qcol = row.indexOf("Q");
+    		
+    		if(Qcol == col)
+    			return false;
+    		
+    		int colsdiff = Math.abs(Qcol - col);
+    		int rowsdiff = Math.abs(stRow - i);
+    		if(colsdiff == rowsdiff){
+    			return false;
+    		}
+    		
+    	}
     	
-    	
-    	return false;
+    	return true;
     	
     }
 	
