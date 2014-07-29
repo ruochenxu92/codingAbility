@@ -12,7 +12,18 @@ import java.util.Stack;
 import org.junit.Test;
 
 public class day18 {
-
+	
+	
+	@Test
+	public void test(){
+		int a = 11 * 14;
+		int b = 24 * 36;
+		int c = b / a;
+		System.out.println(a  + ","  + b + "," + c);
+		
+		
+		
+	}
 	
 	 public TreeNode buildTree(int[] preorder, int[] inorder) {
 	        
@@ -230,33 +241,33 @@ public class day18 {
 	
 	
 	
-	public TreeNode sortedListToBST(ListNode head){
-	    if(head == null)
-	        return null;
-	    if(head.next == null)
-	        return new TreeNode(head.val);
-	    ListNode sentinel = new ListNode(0);
-	    sentinel.next = head;
-	    
-	    int length = 0;
-	    ListNode curr = head;
-	    
-	    for(;curr!= null; curr = curr.next) 
-	        length++;
-	    
-	    curr = sentinel;
-	    for(int i = 0; i < length/2; i++){
-	        curr = curr.next;
-	    }
-	    
-	    curr.next = null;
-	    ListNode midnode = curr.next;
-	    TreeNode mid = new TreeNode(midnode.val);
-	    
-	    mid.right = sortedListToBST(head);
-	    mid.left =  sortedListToBST(midnode.next);
-	    return mid;
-	}
+	    public TreeNode sortedListToBST(ListNode head){
+		    if(head == null)
+		        return null;
+		    if(head.next == null)
+		        return new TreeNode(head.val);
+		    ListNode sentinel = new ListNode(0);
+		    sentinel.next = head;
+		    
+		    int length = 0;
+		    ListNode curr = head;
+		    
+		    for(;curr!= null; curr = curr.next) 
+		        length++;
+		    
+		    curr = sentinel;
+		    for(int i = 0; i < length/2; i++){
+		        curr = curr.next;
+		    }
+		    
+		    ListNode midnode = curr.next;
+		    curr.next = null;
+		    TreeNode mid = new TreeNode(midnode.val);
+		    
+		    mid.left = sortedListToBST(head);
+		    mid.right =  sortedListToBST(midnode.next);
+		    return mid;
+		}
 	
 	
 //	public TreeNode sortedListToBST(ListNode head){
