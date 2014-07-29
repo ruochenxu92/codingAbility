@@ -13,6 +13,16 @@ import org.junit.Test;
 public class day19 {
 	
 	
+	
+	
+	
+	/**
+	 * sentinel, midnode, mid is very important in this question
+	 * @param head
+	 * @return
+	 */
+	
+	
 	public TreeNode sortedListToBST(ListNode head){
 	    if(head == null)
 	        return null;
