@@ -12,67 +12,66 @@ import java.util.Stack;
 import org.junit.Test;
 
 public class day22 {
-	 public ListNode deleteDuplicates(ListNode head){
-	        if(head == null || head.next == null)
-	            return head;
-	        
-	        ListNode sentinel = new ListNode(0);
-	        ListNode tail = sentinel;
-	        ListNode prev = head;
-	        ListNode curr = head.next;        
-	        
-	        while(curr != null){
-	            if(prev.val != curr.val){
-	                prev = prev.next;
-	                curr = curr.next;
-	            }else{
-	                while(curr != null && prev.val == curr.val){
-	                    prev = prev.next;
-	                    curr = curr.next;
-	                }                
-	                if(curr == null){
-	                    tail.next = curr;
-	                    return head;
-	                }else{
-	                    tail.next = curr;
-	                    if(curr.next != null){
-	                        if(curr != curr.next){
-	                            tail = tail.next;
-	                        }else{
-	                            
-	                        }
-	                    }
-	                    
-	                    
-	                }
-	                
-	            }
-	        }
-	        
-	        
-	        
-	    }
-	
-	 public ListNode deleteDuplicates(ListNode head){
-	       if(head == null || head.next == null)
-	            return head;
-	        
-	       ListNode prev = head;
-	       ListNode curr = head.next;
-	       
-	       while(curr != null){
-	           if(prev.val == curr.val){
-	               prev.next = curr.next;
-	               curr = curr.next;
-	           }else{
-	               prev = prev.next;
-	               curr = curr.next;
-	           }
-	       }
-	        
-	       return head;
-	    }
-	 
+//	 public ListNode deleteDuplicates(ListNode head){
+//	        if(head == null || head.next == null)
+//	            return head;
+//	        
+//	        ListNode sentinel = new ListNode(0);
+//	        ListNode tail = sentinel;
+//	        ListNode prev = head;
+//	        ListNode curr = head.next;        
+//	        
+//	        while(curr != null){
+//	            if(prev.val != curr.val){
+//	                prev = prev.next;
+//	                curr = curr.next;
+//	            }else{
+//	                while(curr != null && prev.val == curr.val){
+//	                    prev = prev.next;
+//	                    curr = curr.next;
+//	                }                
+//	                if(curr == null){
+//	                    tail.next = curr;
+//	                    return head;
+//	                }else{
+//	                    tail.next = curr;
+//	                    if(curr.next != null){
+//	                        if(curr != curr.next){
+//	                            tail = tail.next;
+//	                        }else{
+//	                            
+//	                        }
+//	                    }
+//	                    
+//	                }
+//	                
+//	            }
+//	        }
+//	        
+//	        
+//	        
+//	    }
+//	
+//	 public ListNode deleteDuplicates(ListNode head){
+//	       if(head == null || head.next == null)
+//	            return head;
+//	        
+//	       ListNode prev = head;
+//	       ListNode curr = head.next;
+//	       
+//	       while(curr != null){
+//	           if(prev.val == curr.val){
+//	               prev.next = curr.next;
+//	               curr = curr.next;
+//	           }else{
+//	               prev = prev.next;
+//	               curr = curr.next;
+//	           }
+//	       }
+//	        
+//	       return head;
+//	    }
+//	 
 	 
 	 
 	
