@@ -10,8 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 import org.junit.Test;
@@ -168,7 +173,7 @@ public class ThirdClass {
 	 * I start from len = 1, 
 	 * so many details, I need to find another good implementations, anyway, understand the thoughts of merge sort 
 	 * is important.
-	 * I think merge sort > quick sort since the performance can be improve by using multi-thread
+	 * I think merge sort > quick sort since the performance can be improved by using multi-thread
 	 */
 	
 	
@@ -242,6 +247,7 @@ public class ThirdClass {
 	}
 	
 	
+
 	public int[] merge_sort(int[] num) {
 		if (num.length <= 1) {
 			return num;
@@ -300,8 +306,110 @@ public class ThirdClass {
 	
 	
 	/**
-	 * 3.0 quick sort, skip yet, update later
+	 * 2.2 merge Sort easiest merge sort
+	 * from professor notes
 	 */
+	
+	
+	@Test
+	public void testmergeSort__() {
+		int[] data = new int[] {3, 4, 5, 7, 8, 1, 2, 0};
+		mergeSort(data, 0, data.length - 1);
+		assertArrayEquals(data, new int[]{0,1,2,3,4,5,7,8});
+	}
+	
+	public void mergeSort(int[] data, int lo, int hi) {
+		if (lo >= hi) {
+			return;
+		}
+		
+		int mid = ( lo + hi ) / 2;   //int mid = lo + (hi - lo) / 2;
+		mergeSort(data, lo, mid);
+		mergeSort(data, mid + 1, hi);
+		
+		int size = hi + 1 - lo; // whole size from lo - mid - hi
+		int[] tmp = new int[size];
+		merge_(data, lo, mid, mid + 1, hi, tmp);
+		
+		for(int i = 0; i < tmp.length; i++) {
+			data[i + lo] = tmp[i];
+		}
+	}
+	
+	private void merge_(int[] data, int Astart, int Alast, int Bstart, int Blast, int[] tmp){
+		int index = 0;
+		while(Astart <= Alast || Bstart <= Blast) {
+			if (Astart <= Alast  && Bstart <= Blast) {
+				if (data[Astart] < data[Bstart]) {
+					tmp[index++] = data[Astart++];
+				} else {
+					tmp[index++] = data[Bstart++];
+				}
+			} else if (Astart <= Alast) {
+				tmp[index++] = data[Astart++];
+			} else {
+				tmp[index++] = data[Bstart++];
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * 3.0 quick sort
+	 * O(nlgn) O(1)
+	 * in-place partitioning algorithm
+	 * from professor notes 
+	 */
+	@Test
+	public void testquickSort() {
+		int[] data = new int[] {3, 4, 5, 7, 8, 1, 2, 0};
+		quickSort(data, 0, data.length - 1);
+		assertArrayEquals(data, new int[]{0,1,2,3,4,5,7,8});
+	}
+	
+	public void quickSort(int[] data, int lo, int hi) {
+		if (hi > lo) {
+			int pivot = (lo + hi) / 2;
+			int newPivotIndex = partition(data, lo, hi, pivot);
+			
+			quickSort(data, lo, newPivotIndex - 1);
+			quickSort(data, newPivotIndex + 1, hi);
+		}
+	}
+	
+	
+	//this is most important part of quick sort
+	public int partition(int[] data, int lo, int hi, int pivotIndex) {
+		int pivotValue = data[pivotIndex];
+		swap(data, pivotIndex, lo);
+		//start working in, from both ends of the list
+		int left = lo + 1, right = hi;
+		while (left < right) {
+			if (data[left] >= pivotValue) {
+				swap(data, left, right);
+				right--;
+			} else {
+				left++;
+			}
+		}
+		
+		//the pivot will need to go to the left of the final boundary if the last
+		//value is larger than the pivot value
+		if (data[left] > pivotValue) {
+			left--;
+		}
+		swap(data, lo, left);
+		return left;
+	}
+	
+	void swap(int[] data, int posA, int posB) {
+		int tmp = data[posA];
+		data[posA] = data[posB];
+		data[posB] = tmp;
+	}
+	
+	
 	
 	
 	/**
@@ -406,7 +514,7 @@ public class ThirdClass {
 	
 	
 	/**
-	 * 6. implement an iterator in BST
+	 * 6.0 implement an iterator in BST
 	 * http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html
 	 * only need to implement three methods for iterator interface
 	 * boolean has Next()
@@ -455,6 +563,47 @@ public class ThirdClass {
 		}
 		
 	}
+	
+	/**
+	 * 6.1  from stackOverFlow 
+	 * do not need to traverse which spend O(h) time at the beginning
+	 */
+	public class Iterator {
+	    private Stack<TNode> stack = new Stack<>();
+	    private TNode cur;
+
+	    public Iterator(TNode root) {  
+	        cur = root;
+	    }
+
+	    public TNode next() {
+	        while (cur != null) {
+	            stack.push(cur);
+	            cur = cur.left;
+	        }
+
+	        cur = stack.pop();
+	        TNode node = cur;
+	        cur = cur.right;
+
+	        return node;
+	    }
+
+	    public boolean hasNext() {
+	        return (!stack.isEmpty() || cur != null);
+	    }
+
+	}
+	
+	
+	/**
+	 * 6.2 LRU Cache
+	 * Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
+
+		get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+		set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+	 * 
+	 */
 	
 	
 	/**
@@ -564,14 +713,124 @@ public class ThirdClass {
 	    0 --- 2
 	         / \
 	         \_/
+	         
+		12 / 12 test cases passed.
+		Status: Accepted
+		Runtime: 624 ms
+		Submitted: 2 minutes ago
+		O(Edges * 2) Time
+
 	*/
+	class GraphNode{
+		int label;
+		List<GraphNode> neighbors = new ArrayList();
+		GraphNode(int label) {
+			this.label = label;
+			neighbors = new ArrayList();
+		}
+	}
+	public GraphNode cloneGraph(GraphNode node) {
+		if (node == null) {
+			return node;
+		}
+		GraphNode clonehead = new GraphNode(node.label);
+		HashMap<GraphNode, GraphNode> dict = new HashMap();
+		
+		dict.put(node, clonehead);
+		Deque<GraphNode> queue = new ArrayDeque();
+		
+		queue.offer(node);
+		HashSet<GraphNode> visited = new HashSet();  //as global variable
+		visited.add(node);
+
+		while( !queue.isEmpty() ) {
+			GraphNode cur = queue.poll();
+			GraphNode clonecur = dict.get(cur);
+			
+			for (GraphNode neighbor : cur.neighbors){
+				if ( !visited.contains(neighbor) ) {
+					visited.add(neighbor);   
+					GraphNode newnode = new GraphNode(neighbor.label);
+					queue.offer(neighbor);
+					clonecur.neighbors.add(newnode);
+					dict.put(neighbor, newnode);
+				} else {
+					clonecur.neighbors.add(dict.get(neighbor));
+				}
+			}
+		}
+		return clonehead;
+	}
 	
+	/**
+	 * 7.3.0
+	 * Word Ladder I
+	 * 
+	 * 
+	 * Given two words (start and end), and a dictionary, find the length of shortest transformation sequence from start to end, such that:
+
+		Only one letter can be changed at a time
+		Each intermediate word must exist in the dictionary
+		For example,
+		
+		Given:
+		start = "hit"
+		end = "cog"
+		dict = ["hot","dot","dog","lot","log"]
+		As one shortest transformation is "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+		return its length 5.
+		
+		Note:
+		Return 0 if there is no such transformation sequence.
+		All words have the same length.
+		All words contain only lowercase alphabetic characters.
+		37 / 37 test cases passed.
+		Status: Accepted
+		Runtime: 828 ms
+		Submitted: 1 minute ago
+	 */
 	
+	public int ladderLength(String start, String last, Set<String> dict) {
+		 if(start == null || last == null || start.length() != last.length() || start.length() ==0)
+			 return 0;
+		 Deque<String> queue = new ArrayDeque();
+		 queue.offer(start);
+		 HashSet<String> visited = new HashSet();
+		 int depth = 1;
+		 while(!queue.isEmpty()) {
+		     
+		     int size = queue.size();
+		     for (int i = 0; i < size; i++) {
+		         String tmp = queue.poll();
+		         // 以下two loops进行brute force猜， 其实是看两个Nodes 之间是否connected 
+		         for (int k = 0; k < tmp.length(); k++) {
+		             char[] cur = tmp.toCharArray();
+		             for (char c = 'a'; c <= 'z'; c++) {
+		                 cur[k] = c;
+		                 String now = String.copyValueOf(cur);
+		                 if (now.equals(last)) {
+		                     return depth + 1;
+		                 }
+		                 if (dict.contains(now) && !visited.contains(now)) {
+		                     visited.add(now);
+		                     queue.offer(now);
+		                 }
+		             }
+		                 
+		         }
+		         
+		         
+		     }
+		     depth++;
+		 }
+		 return 0;
+	 }
+
 	
 	
 	/**
-	 * 7.3 
-	 * Word Ladder II
+	 * 7.3.1
+	 * Word Ladder II  BFS + DFS
 	 */
 	/*
 		Word Ladder II Total Accepted: 8944 Total Submissions: 80092 My Submissions
@@ -590,7 +849,131 @@ public class ThirdClass {
 		    ["hit","hot","dot","dog","cog"],
 		    ["hit","hot","lot","log","cog"]
 		  ]
+		  
+		  
+		  
+		
+		37 / 37 test cases passed.
+		Status: Accepted
+		Runtime: 1020 ms
+		Submitted: 0 minutes ago
+
+		
+		bug summary: Null Pointer Exception ->forget map.put(last, lastone) 
+
 	 */
+	@Test
+	public void testfindLadders() {
+		String start = "hot";
+		String last = "dog";
+		HashSet dict = new HashSet();
+		String[] strs = new String[]{"hot","cog","dog","tot","hog","hop","pot","dot"};
+		for (int i = 0; i < strs.length; i++) {
+			dict.add(strs[i]);
+		}
+		findLadders(start, last, dict);
+	}
+	
+	
+	
+	class Node{
+        String label;
+        List<Node> neighbors;
+        Node (String label) {
+            this.label = label;
+            this.neighbors = new ArrayList();
+        }
+    }
+    public List<List<String>> findLadders(String start, String last, Set<String> dict) {
+        List res = new ArrayList();
+        if (start == null || last == null || start.length() == 0 
+                || last.length() == 0 || dict.size() == 0) {
+            return res;
+        }
+        int depth = 1;
+        Deque<String> queue = new ArrayDeque();
+        queue.offer(start);
+        HashSet<String> visited = new HashSet();
+        boolean lastLevel = false;
+        HashMap<String, Node> map = new HashMap();
+        Node head = new Node(start);
+        map.put(start, head);
+        visited.add(start);//fixed a bug, start should not be visited again
+        
+        while (!queue.isEmpty()) {
+            HashSet<String> passport = new HashSet();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String tmp = queue.poll();
+                Node node = map.get(tmp);
+                
+                for (int k = 0; k < tmp.length(); k++) {
+                    char[] cur = tmp.toCharArray();
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        cur[k] = c;
+                        String now = String.copyValueOf(cur);
+                        if (now.equals(last)){
+                        	if (!lastLevel) {
+                                Node lastone = new Node(last);
+                                depth++;
+                                lastLevel = true;
+                                node.neighbors.add(lastone);
+                                visited.add(now);
+                                map.put(last, lastone);//fixed a bug
+                            } else{
+                            	Node lastone = map.get(last);
+                                node.neighbors.add(lastone);
+                            }
+                        } 
+                        //!now.equals(tmp) is not necessary
+                        if (dict.contains(now) && !now.equals(tmp) && (!visited.contains(now) || passport.contains(now))) {
+                            if (!visited.contains(now)) {
+                                Node newnode = new Node(now);
+                                queue.offer(now);
+                                map.put(now, newnode);
+                                visited.add(now);
+                                passport.add(now);
+                                node.neighbors.add(newnode);
+                            } else {
+                                Node oldnode = map.get(now);
+                                node.neighbors.add(oldnode);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //after one level is finish
+            if (lastLevel == true) {
+                break;
+            }
+            depth++;
+        }      
+        List<String> sol = new ArrayList();
+        sol.add(start);
+        dfs(head, depth, last, sol, res);
+        return res;
+    }
+    
+    public void dfs(Node head, int depth, String last, 
+                                    List<String> sol, List<List<String>> res) {
+        if (depth == 1) {
+            if (head.label.equals(last)) {
+                List<String> tmp = new ArrayList(sol);
+                res.add(tmp);
+            } 
+            return;
+        }
+        
+        for (Node next : head.neighbors) {
+            sol.add(next.label);
+            dfs(next, depth - 1, last, sol, res);
+            sol.remove(sol.size() - 1);
+        }
+    }
+
+
+	
 	
 	
 	/**
@@ -612,7 +995,84 @@ public class ThirdClass {
 		X X X X
 		X X X X
 		X O X X
+		58 / 58 test cases passed.
+		Status: Accepted
+		Runtime: 536 ms
+		Submitted: 0 minutes ago
+
 	*/
+    
+    public void solve(char[][] board) {
+    	if (board == null || board.length == 0 || board[0].length == 0) {
+    		return;
+    	}
+    	Deque<Integer> idx = new ArrayDeque();
+    	Deque<Integer> idy = new ArrayDeque();
+    	int m = board.length;
+    	int n = board[0].length;
+    	
+    	for (int i = 0; i < m; i++) {
+    		if (board[i][0] == 'O') {
+    			idx.offer(i);
+    			idy.offer(0);
+    		}
+    		if (board[i][n - 1] == 'O') {
+    			idx.offer(i);
+    			idy.offer(n - 1);
+    		}
+    	}
+    	
+    	
+    	for (int i = 0; i < n; i++) {
+    		if (board[0][i] == 'O') {
+    			idx.offer(0);
+    			idy.offer(i);
+    		} 
+    		if (board[m- 1][i] == 'O') {
+    			idx.offer(m - 1);
+    			idy.offer(i);
+    		}
+    	}
+    	
+    	while(!idx.isEmpty()) {
+    		int x = idx.poll();
+    		int y = idy.poll();
+    		
+    		board[x][y] = 'I';
+    		if (x - 1 >= 0 && board[x - 1][y] == 'O') {  //'I' has already explore and no need to add again
+    			idx.offer(x - 1);
+    			idy.offer(y);
+    		}
+    		if (x + 1 < m && board[x + 1][y] == 'O') {
+    			idx.offer(x + 1);
+    			idy.offer(y);
+    		}
+    		if (y - 1 >= 0 && board[x][y - 1] == 'O') {
+    			idx.offer(x);
+    			idy.offer(y - 1);
+    		}
+    		if (y + 1 < n && board[x][y + 1] == 'O') {
+    			idx.offer(x);
+    			idy.offer(y + 1);
+    		}
+    	}
+    	
+    	for (int i = 0; i < m; i++) {
+    		for (int j = 0; j < n; j++) {
+    			if (board[i][j] == 'I') {
+    				board[i][j] = 'O';
+    			} else {
+    				board[i][j] = 'X';
+    			}
+    		}
+    	}
+    }
+    
+    
+    
+    
+    
+    
 	
 	
 	
@@ -732,11 +1192,11 @@ public class ThirdClass {
 	 * has a parent
 	 * 
 	 */
-	class Node{
-		Node left, right, parent;
+	class TNode{
+		TNode left, right, parent;
 	}
 	
-	public Node LCA(Node node1, Node node2) {
+	public TNode LCA(TNode node1, TNode node2) {
 		int dep1 = maxDepth(node1);
 		int dep2 = maxDepth(node2);
 		
@@ -763,7 +1223,7 @@ public class ThirdClass {
 		
 	}
 	
-	private int maxDepth(Node root){
+	private int maxDepth(TNode root){
 		if (root == null) {
 			return 0;
 		}
@@ -801,18 +1261,238 @@ public class ThirdClass {
 	
 	
 	/**
-	 * leetcode
+	 * leetcode (Divide and Conquer)
 	 * 12.0 construct tree from preorder, inorder (DAC);
 	 * Given preorder and inorder traversal of a tree, construct the binary tree.
 	 * 
 	 * 12.1 construct tree from inorder, postorder(DAC);
 	 * Given inorder and postorder traversal of a tree, construct the binary tree.
+	 * 
+	 *  202 / 202 test cases passed.
+		Status: Accepted
+		Runtime: 488 ms
+		Submitted: 0 minutes ago
+
+	 * tips: 碰到array index recursion, java 里尽量用 start + len 组合，可以少出bugs
 	 */
-	
-	
-	
-	
-	 
-	
-	
+    public TreeNode buildTree(int[] preorder, int[] inorder){
+    	if (preorder == null || inorder == null) {
+    		return null;
+    	}
+    	if (preorder.length != inorder.length) {
+    		return null;
+    	}
+    	return getTree(inorder, 0, preorder, 0, inorder.length);
+    }
+    
+    public TreeNode getTree(int[] preorder, int pstart, int[] inorder, int istart, int len) {
+    	if (len == 0) {
+    		return null;
+    	}
+    	if (len == 1) {
+    		return new TreeNode(preorder[pstart]);
+    	}
+    	//Conquer
+    	int rootValue = preorder[pstart];
+    	int rootIndex = -1;
+    	for (int i = istart; i < istart + len; i++) {
+    		if (inorder[i] == rootValue) {
+    			rootIndex = i;
+    			break;
+    		}
+    	}
+    	int leftLength = rootIndex - istart;
+    	int rightLength = len - 1 - leftLength;
+    	TreeNode root = new TreeNode(rootValue);
+    	
+    	//Divide 
+    	root.left = getTree(preorder, pstart + 1, inorder, istart, leftLength);
+    	root.right = getTree(preorder, pstart + leftLength + 1, inorder, rootIndex + 1, rightLength);
+    	return root;
+    }
+    
+    
+
+	/**
+	 * 13.0 Divide and conquer
+	 * this can be solved by divide the left, right two parts, 
+	 * s1 = left1 + right1;
+	 * s2 = left2 + right2;
+	 * 
+	 * but make sure the length should be same. and we can swicth them
+	 * if (left1 == left2 && right1 == right2 || left1 == right2 && left2 == right1) 
+	 * return true
+	 */
+    /*
+     	Scramble String Total Accepted: 10943 Total Submissions: 48570 My Submissions
+		Given a string s1, we may represent it as a binary tree by partitioning it to two non-empty substrings recursively.
+		
+		Below is one possible representation of s1 = "great":
+		
+		    great
+		   /    \
+		  gr    eat
+		 / \    /  \
+		g   r  e   at
+		           / \
+		          a   t
+		To scramble the string, we may choose any non-leaf node and swap its two children.
+		
+		For example, if we choose the node "gr" and swap its two children, it produces a scrambled string "rgeat".
+		
+		    rgeat
+		   /    \
+		  rg    eat
+		 / \    /  \
+		r   g  e   at
+		           / \
+		          a   t
+		We say that "rgeat" is a scrambled string of "great".
+		
+		Similarly, if we continue to swap the children of nodes "eat" and "at", it produces a scrambled string "rgtae".
+		
+		    rgtae
+		   /    \
+		  rg    tae
+		 / \    /  \
+		r   g  ta  e
+		       / \
+		      t   a
+		We say that "rgtae" is a scrambled string of "great".
+		
+		Given two strings s1 and s2 of the same length, determine if s2 is a scrambled string of s1.
+			
+		}
+		
+		281 / 281 test cases passed.
+		Status: Accepted
+		Runtime: 424 ms
+		Submitted: 5 minutes ago
+
+		*/
+    public boolean isScramble(String s1, String s2){
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+        return dac(s1, s2);
+    }
+    public boolean dac(String s1, String s2) {
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        if (s1.length() == 1) {
+            return s1.equals(s2);
+        }
+        if (!check(s1, s2)) {
+            return false;
+        }
+        
+        for (int i = 0; i < s1.length(); i++) {
+            String s11 = s1.substring(0, i); // i
+            String s12 = s1.substring(i, s1.length()); // s1.length - i
+            
+            String s21 = s2.substring(0, i);
+            String s22 = s2.substring(i, s2.length());  
+            boolean res = dac(s11, s21) && dac(s12, s22);
+            if (!res) {
+                String s31 = s2.substring(0, s2.length() - i);
+                String s32 = s2.substring(s2.length() - i, s2.length());
+                res = dac(s11, s32) && dac(s12, s31);                
+            }
+            if (res) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean check(String s1, String s2) {
+        int[] c1 = new int[26];
+        int[] c2 = new int[26];
+        
+        for (int i = 0; i < s1.length(); i++) {
+            c1[s1.charAt(i) - 'a']++;
+            c2[s2.charAt(i) - 'a']++;
+        }
+        
+        for (int i = 0; i < 26; i++) {
+            if (c1[i] != c2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * 14.0 Divide and Conquer + DP
+     * Unique Binary Search Trees II
+     *      3
+     *    1   4
+     * count[3] = count[0] * count[2] + count[1] * count[1] + count[2] * count[1] 
+     * count[n] = All Possible Of (count[left] * count[right])
+     * the total problem divide into left and right subtree.
+     */
+    
+    @Test
+    public void testUniqueTree() {
+    	int res = UniqueTreeI(3);
+    	assertEquals(5, res);
+    }
+    
+    public int UniqueTreeI(int n) {
+    	if (n == 0) {
+    		return 1;
+    	}
+    	if (n == 1) { 
+    		return 1;
+    	}
+
+    	int[] count = new int[n + 1]; 
+    	count[0] = 1;
+    	count[1] = 1;
+    	for (int i = 2; i <= n; i++) {
+    		int sum = 0;
+    		for (int j = 0; j < i; j++) {
+    			sum += count[j] * count[i - 1 - j];
+    		}
+    		count[i] = sum;
+    	}
+    	return count[n];
+    }
+    
+    public List<TreeNode> UniqueTree(int n) {
+    	List res = new ArrayList();
+    	if (n == 0) {
+    		return res;
+    	}
+    	
+    	
+    	
+    	
+    }
+    
+   
+    
+    
+    
+    
+    
+    
+    /**
+     * 15.0 Best Time to Buy and Sell Stock III
+     * We have twice choice to buy and sell,
+     * how to earn the biggest money.
+     * 
+     */
+    
+    
+    /**
+     * 16.0 Divide and Conquer
+     * Flatten Binary Tree to Linked List
+     */
+    
+    
+    
+    
+    
 }
