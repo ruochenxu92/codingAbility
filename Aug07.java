@@ -12,33 +12,120 @@ import org.junit.Test;
 public class Aug07 {
 	
 	
+  @Test
+  public void testbitmanipulate(){
+	  System.out.println(1 & 1);
+	  System.out.println(4 & 1);
+	  int a = 1;
+	  System.out.println(-a);
+	  char[] data = new char[]{'0','1','1'};
+	  String res = String.copyValueOf(data, 1, 2);
+	  System.out.println(res);
+	  
+	  char c = '0';
+	  char b = (char) (c + 1);
+	  System.out.println(b);
+	  
+  }
+	
+	
+  public boolean isPalindrome(String s) {
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        s = s.trim();
+        s = s.toLowerCase();
+        int start = 0;
+        int  last = s.length() - 1;
+        while(start < last) {
+            if (!isAlphaNum(s.charAt(start))) {
+                start++;
+                continue;
+            }
+            if (!isAlphaNum(s.charAt(last))) {
+                last--;
+                continue;
+            }
+            if (s.charAt(start) != s.charAt(last)) {
+                return false;
+            }
+            start++;
+            last--;
+        }
+        return true;
+    }
+    private boolean isAlphaNum(char c){
+        return Character.isLetter(c) || Character.isDigit(c);
+    }
+    
+	
+	private TreeNode firstElement = null;
+    private TreeNode secondElement = null;
+    private TreeNode lastElement = new TreeNode(Integer.MIN_VALUE);
+    
+    private void traverse(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        traverse(root.left);
+        if (firstElement == null && root.val < lastElement.val) {
+            firstElement = root;
+        }
+        if (secondElement == null && root.val < lastElement.val) {
+            secondElement = root;
+        }
+        lastElement = root;
+        traverse(root.right);
+    }
+    
+    
+    public void recoverTree(TreeNode root) {
+        if (root == null) {
+            return;
+        }    
+        traverse(root);
+        int tmp = firstElement.val;
+        firstElement.val = secondElement.val;
+        secondElement.val = tmp;
+    }
+	
+	
+	
+//	Address: 506 S. Wright Street Room 100A
+//	Urbana Illinois 61801
+//	
+	//	@Test
+	//	public void testlongest(){
+	//		String s = "123";
+	//		s.contains("1");
+	//	}
 	
 	public int longestValidParentheses(String s) {
-        if (s == null || s.length() == 0) {
-            return 0;
-        }
-        Stack<Integer> stack = new Stack();
-        int prestart = -1;
-        int maxLen = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                stack.push(i);
-            }else{
-                if (stack.empty()) {
-                    prestart = i;//if right ( appear as seperate sign
-                }else{
-                    stack.pop();
-                    
-                    if(stack.empty()) {
-                        maxLen = Math.max(maxLen, i + 1 - (prestart + 1));
-                    }else{
-                        maxLen = Math.max(maxLen, i + 1 - (stack.peek() + 1));
-                    }
-                }
-            }
-        }
-        return maxLen;
-    }
+		if (s == null || s.length() == 0) {
+			return 0;
+		}
+		Stack<Integer> stack = new Stack();
+		int prestart = -1;
+		int maxLen = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '(') {
+				stack.push(i);
+			} else {
+				if (stack.empty()) {
+					prestart = i;// if right ( appear as seperate sign
+				} else {
+					stack.pop();
+
+					if (stack.empty()) {
+						maxLen = Math.max(maxLen, i + 1 - (prestart + 1));
+					} else {
+						maxLen = Math.max(maxLen, i + 1 - (stack.peek() + 1));
+					}
+				}
+			}
+		}
+		return maxLen;
+	}
 	
 	@Test
 	public void testsimplifyPath(){

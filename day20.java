@@ -16,6 +16,28 @@ public class day20 {
 	
 	
 	
+	@Test
+	public void testhasPathSum(){
+		TreeNode root = new TreeNode(1);
+	}
+	
+	
+	
+	 public boolean hasPathSum(TreeNode root, int currsum){
+		  
+	        if(root == null){
+	            return false;
+	        }
+	        
+	        if(root.left == null && root.right == null){
+	            return currsum == root.val;
+	        }
+	        
+	        return hasPathSum(root.left, currsum - root.val) || hasPathSum(root.right, currsum - root.val);
+	       
+	  }
+	 
+	
 	
 	
 	 public int minPathSum(int[][] grid){

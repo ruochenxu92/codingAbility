@@ -16,8 +16,6 @@ import org.junit.Test;
 public class ThirdClass {
 	
 	
-	
-	
 //	DFS Template
 //	Binary Tree DFS template
 	/**
@@ -45,22 +43,24 @@ public class ThirdClass {
 
 	//Tempate 2: Divide & Conquer
 
-//	public class Solution {
-//	    public ResultType traversal(TreeNode root) {
-//	        // null or leaf
-//	        if (root == null) {
-//	            // do something and return;
-//	        }
-//	        
-//	        // Divide
-//	        ResultType left = traversal(root.left);
-//	        ResultType right = traversal(root.right);
-//	        
-//	        // Conquer
-//	        ResultType result = Merge from left and right.
-//	        return result;
-//	    }
-//	}
+	/*
+	public class Solution {
+	    public ResultType traversal(TreeNode root) {
+	        // null or leaf
+	        if (root == null) {
+	            // do something and return;
+	        }
+	        
+	        // Divide
+	        ResultType left = traversal(root.left);
+	        ResultType right = traversal(root.right);
+	        
+	        // Conquer
+	        ResultType result = Merge from left and right.
+	        return result;
+	    }
+	}
+	*/
 	
 	
 	
@@ -158,7 +158,7 @@ public class ThirdClass {
 	
 	/**
 	 * 2.0
-	 * merge sort an array, this is not easy,
+	 * merge sort an array, this is not easy, using iterative method is painful.
 	 * merge sort has two steps, partition and merge, partition is automatically
 	 * finish, but how to merge
 	 * I start from len = 1, 
@@ -219,6 +219,79 @@ public class ThirdClass {
 		for(int i = 0; i < len; i++) {
 			num[start + i] = res[start + i];
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * 2.1 merge sort easy version by using recursive call
+	 * refer information google merge sort algorithm
+	 * 
+	 */
+	
+	@Test
+	public void testmergeSort() {
+		int[] num = new int[]{3, 4, 1, 2, 5, 6, 7};
+		int[] res = merge_sort(num);
+		assertArrayEquals(res, new int[]{1,2,3,4,5,6, 7});
+	}
+	
+	
+	public int[] merge_sort(int[] num) {
+		if (num.length <= 1) {
+			return num;
+		}
+		int middle = (num.length - 1) / 2;
+		int[] left = new int[middle + 1];
+		int[] right = new int[num.length - left.length];
+		
+		for(int i = 0; i < middle + 1; i++) {
+			left[i] = num[i];
+		}
+		
+		int len = left.length;
+		for(int i = 0; i + len< num.length; i++) {
+			right[i] = num[i + len];
+		}
+		
+		left = merge_sort(left);
+		right = merge_sort(right);
+		
+		return merge(left, right);
+	}
+	
+	@Test
+	public void testmerge_(){
+		int[] left = new int[] {3};
+		int[] right = new int[] {};
+		int[] res = merge(left,right);
+		assertArrayEquals(res, new int[]{3});
+	}
+	
+	
+	
+	public int[] merge(int[] left, int[] right) {
+		int[] res = new int[left.length + right.length];
+		int m = left.length;
+		int n = right.length;
+		int index = m + n;
+		
+		//给面试官展示从后往前的玩法
+		while( m > 0 || n > 0) {
+			if (m > 0 && n > 0) {
+				if (left[m - 1] > right[n - 1]) {
+					res[--index] = left[--m];
+				} else {
+					res[--index] = right[--n];
+				}
+			} else if (m > 0) {
+				res[--index] = left[--m];
+			} else {
+				res[--index] = right[--n];
+			}
+		}
+		return res;
 	}
 	
 	
@@ -384,7 +457,7 @@ public class ThirdClass {
 	 * 
 	 * 7.0 level order traversal
 	 * BST template (level Order traversal)
-	 * BFS question in leetcode
+	 * BFS questions in leetcode
 	 * Zagzig traversal 
 	 * Clone Graph
 	   Word Ladder II
@@ -463,19 +536,79 @@ public class ThirdClass {
 	 * Clone Graph
 	 * 
 	 */
+	/*
+	Clone Graph Total Accepted: 14170 Total Submissions: 62868 My Submissions
+	Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
+
+
+	OJ's undirected graph serialization:
+	Nodes are labeled uniquely.
+
+	We use # as a separator for each node, and , as a separator for node label and each neighbor of the node.
+	As an example, consider the serialized graph {0,1,2#1,2#2,2}.
+
+	The graph has a total of three nodes, and therefore contains three parts as separated by #.
+
+	First node is labeled as 0. Connect node 0 to both nodes 1 and 2.
+	Second node is labeled as 1. Connect node 1 to node 2.
+	Third node is labeled as 2. Connect node 2 to node 2 (itself), thus forming a self-cycle.
+	Visually, the graph looks like the following:
+
+	       1
+	      / \
+	     /   \
+	    0 --- 2
+	         / \
+	         \_/
+	*/
+	
+	
 	
 	
 	/**
 	 * 7.3 
 	 * Word Ladder II
-	 * 
+	 */
+	/*
+		Word Ladder II Total Accepted: 8944 Total Submissions: 80092 My Submissions
+		Given two words (start and end), and a dictionary, find all shortest transformation sequence(s) from start to end, such that:
+	
+		Only one letter can be changed at a time
+		Each intermediate word must exist in the dictionary
+		For example,
+	
+		Given:
+		start = "hit"
+		end = "cog"
+		dict = ["hot","dot","dog","lot","log"]
+		Return
+		  [
+		    ["hit","hot","dot","dog","cog"],
+		    ["hit","hot","lot","log","cog"]
+		  ]
 	 */
 	
 	
 	/**
 	 * 7.4 
-	 * Surrend Region.
+	 * Surrounded Regions
 	 */
+	/*	Given a 2D board containing 'X' and 'O', capture all regions surrounded by 'X'.
+	
+		A region is captured by flipping all 'O's into 'X's in that surrounded region.
+	
+		For example,
+		X X X X
+		X O O X
+		X X O X
+		X O X X
+		After running your function, the board should be:
+	
+		X X X X
+		X X X X
+		X X X X
+		X O X X
+	*/
 	
 	
 	
@@ -663,13 +796,13 @@ public class ThirdClass {
 	}
 	
 	
-	
-	
-	
-	
 	/**
+	 * leetcode
 	 * 12.0 construct tree from preorder, inorder (DAC);
+	 * Given preorder and inorder traversal of a tree, construct the binary tree.
+	 * 
 	 * 12.1 construct tree from inorder, postorder(DAC);
+	 * Given inorder and postorder traversal of a tree, construct the binary tree.
 	 */
 	
 	

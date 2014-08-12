@@ -12,14 +12,6 @@ import org.junit.Test;
 public class day16 {
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	 public List<Integer> findSubstring1(String S, String[] L){
 	        int n = L.length;
 	        int w = L[0].length();

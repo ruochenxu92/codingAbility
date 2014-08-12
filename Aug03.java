@@ -1,6 +1,7 @@
 package leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -316,6 +317,20 @@ public class Aug03 {
 			System.out.println(cout[i]);
 		}
 		
+		/* result O(4 * n) = O(n) time; stable sort
+		 *  1235
+			2343
+			2850
+			3244
+			3824
+			3753
+			5283
+		 */
 	}
+	
+	
+	
+	
+	
 	
 }

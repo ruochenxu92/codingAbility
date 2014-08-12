@@ -13,9 +13,6 @@ import org.junit.Test;
 public class day19 {
 	
 	
-	
-	
-	
 	/**
 	 * sentinel, midnode, mid is very important in this question
 	 * @param head

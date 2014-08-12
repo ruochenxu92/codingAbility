@@ -14,34 +14,53 @@ public class day21 {
 	
 	
 	
-	public List<Integer> spiralOrder(int[][] matrix){
-	      ArrayList<Integer> rst = new ArrayList<Integer>();
-	        if(matrix == null || matrix.length == 0) 
-	            return rst;
-	        
-	        int rows = matrix.length;
-	        int cols = matrix[0].length;
-	        int count = 0;
-	        while(count * 2 < rows && count * 2 < cols){
-	            for(int i = count; i < cols-count; i++)
-	                rst.add(matrix[count][i]);
-	            
-	            
-	            for(int i = count+1; i< rows-count; i++)
-	                rst.add(matrix[i][cols-count-1]);
-	            
-	            if(rows - 2 * count == 1 || cols - 2 * count == 1)  // if only one row /col remains
-	                break;
-	                
-	            for(int i = cols-count-2; i>=count; i--)
-	                rst.add(matrix[rows-count-1][i]);
-	                
-	            for(int i = rows-count-2; i>= count+1; i--)
-	                rst.add(matrix[i][count]);
-	            
-	            count++;
-	        }
-	        return rst;
+	 public List<Integer> spiralOrder(int[][] matrix){
+	      int m = matrix.length;
+	      if( m == 0)
+	        return new ArrayList();
+	      int n = matrix[0].length;
+	      
+	      int xStart = 0;
+	      int yStart = 0;
+	      
+	      List<Integer> res = new ArrayList();
+	      
+	      while(m > 0 && n > 0){
+	          if(m == 1 || n == 1){
+	              if(n == 1){
+	                  while(yStart < n)
+	                    res.add(matrix[yStart++][xStart]);
+	              }else{
+	                  while(xStart < m)
+	                    res.add(matrix[yStart][xStart++]);
+	              }
+	              break;
+	          }
+	          
+	          for(int i = 0; i < n-1; i ++){
+	              res.add(matrix[yStart][xStart + i]);  
+	          }
+	          
+	          for(int i = 0; i < m-1; i++){
+	              res.add(matrix[yStart+i][xStart + n - 1]);           
+	          }
+	          
+	          for(int i = 0; i < n-1; i++){
+	              res.add(matrix[yStart+m-1][xStart + n - 1 - i]);
+	          }
+	          
+	          for(int i = 0; i < m-1; i++){
+	              res.add(matrix[yStart + m - 1 - i][xStart]);
+	          }
+	          
+	          xStart ++;
+	          yStart ++;
+	          
+	          m = m - 2;
+	          n = n - 2;
+	      }
+	      
+	      return res;
 	   }
 		
 	public int[][] generateMatrix(int n) {
