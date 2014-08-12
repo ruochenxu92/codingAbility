@@ -23,7 +23,9 @@ import org.junit.Test;
 
 public class ThirdClass {
 	
-	
+	/**
+	 * 大部分保留leetcode原名， 少部分太长或冲突，略加修改。 
+	 */
 //	DFS Template
 //	Binary Tree DFS template
 	/**
@@ -604,6 +606,15 @@ public class ThirdClass {
 		set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
 	 * 
 	 */
+	
+	class LRUCache{
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	/**
@@ -1460,36 +1471,160 @@ public class ThirdClass {
     	return count[n];
     }
     
-    public List<TreeNode> UniqueTree(int n) {
+    
+    /**
+     * unique tree II 
+     * @param n
+     * @return
+     * 
+		9 / 9 test cases passed.
+		Status: Accepted
+		Runtime: 460 ms
+		Submitted: 1 minute ago
+
+     */
+    
+    public List<TreeNode> generateTrees(int n) {
     	List res = new ArrayList();
     	if (n == 0) {
+    	    res.add(null);
+    		return res;
+    	}
+    	return buildTree(1, n);
+    }
+    
+    private List<TreeNode> buildTree(int start, int last) {
+    	List<TreeNode> res = new ArrayList();
+    	if (start > last) {
+    	    res.add(null);//null stands for empty tree
+    		return res;
+    	}
+    	if (start == last) {
+    		TreeNode root = new TreeNode(start);
+    		res.add(root);
     		return res;
     	}
     	
-    	
-    	
-    	
+    	for(int i = start; i <= last; i++) {
+    		
+    		//divide
+    		List<TreeNode> leftsubTrees  = buildTree(start, i - 1);
+    		List<TreeNode> rightsubTrees = buildTree(i + 1, last);
+    		
+    		//conquer
+    		for (TreeNode leftnode : leftsubTrees) {  //what will happen leftsubTrees == null
+    			for (TreeNode rightnode : rightsubTrees) {
+    	    		TreeNode root = new TreeNode(i);
+    	    		root.left = leftnode;
+    	    		root.right = rightnode;
+    	    		res.add(root);
+    			}
+    		}
+    	}
+    	return res;
     }
-    
-   
-    
-    
-    
     
     
     
     /**
      * 15.0 Best Time to Buy and Sell Stock III
+     *  198 / 198 test cases passed.
+		Status: Accepted
+		Runtime: 496 ms
+		Submitted: 1 minute ago
+
      * We have twice choice to buy and sell,
      * how to earn the biggest money.
      * 
      */
     
+    public int maxProfit(int[] data) {
+        //1 2 1 2
+        if (data == null || data.length <= 1) {
+            return 0;
+        }
+        
+        int n = data.length;
+        //divide into two dps
+        int[] forward = new int[n + 1];
+        forward[0] = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] < min) {
+                min = data[i];
+            }
+            max = Math.max(max, data[i] - min);
+            forward[i + 1] = max;
+        }
+        
+        int[] back = new int[n];
+        back[n] = 0;
+        int maxValue = Integer.MIN_VALUE;
+        max = Integer.MIN_VALUE;
+        
+        for (int i = data.length - 1; i >= 0; i--) {
+            if (data[i] > maxValue) {
+                maxValue = data[i];
+            }
+            max = Math.max(max, maxValue - data[i]);
+            back[i] = max;            
+        }
+        
+        //conquer
+        int maxProfit = Integer.MIN_VALUE;
+        
+        for (int i = 0; i < data.length; i++) {
+            int sum = forward[i]; // buy first from 0 to i - 1
+            sum += back[i];       // buy sec from i to data.length - 1
+            maxProfit = Math.max(maxProfit, sum);
+        }
+        return maxProfit;
+    }
+    
+    
     
     /**
      * 16.0 Divide and Conquer
      * Flatten Binary Tree to Linked List
+     * 
+     * 
+     * 
+     * 
+	225 / 225 test cases passed.
+	Status: Accepted
+	Runtime: 416 ms
+	Submitted: 0 minutes ago
+
      */
+    
+    public void flatten(TreeNode root) {
+    	if (root == null) {
+    		return;
+    	}
+        convertToList(root);
+    }
+    
+    private TreeNode convertToList(TreeNode root) {
+    	if (root == null) {
+    		return root;
+    	}
+    	
+    	TreeNode tmpRight = root.right;
+    	
+    	//divide 
+    	root.right = convertToList(root.left);
+    	root.left  = null;
+    	
+    	//conquer
+    	TreeNode trav = root;
+    	while (trav.right != null) {
+    		trav = trav.right;
+    	}
+    	trav.right = convertToList(tmpRight);
+    	return root;
+    }
     
     
     
