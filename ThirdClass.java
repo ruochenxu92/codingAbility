@@ -24,7 +24,7 @@ import org.junit.Test;
 public class ThirdClass {
 	
 	/**
-	 * 大部分保留leetcode原名， 少部分太长或冲突，略加修改。 
+	 * 大部分保留leetcode原名， 少部分太长或冲突，略加修改。 All finished now! Aug 9:02pm CST
 	 */
 //	DFS Template
 //	Binary Tree DFS template
@@ -309,7 +309,7 @@ public class ThirdClass {
 	
 	/**
 	 * 2.2 merge Sort easiest merge sort
-	 * from professor notes
+	 * from professor top-secret notes. this is version that I like most. Easy.
 	 */
 	
 	
@@ -361,7 +361,8 @@ public class ThirdClass {
 	 * 3.0 quick sort
 	 * O(nlgn) O(1)
 	 * in-place partitioning algorithm
-	 * from professor notes 
+	 * from professor top-secret notes, please see my notes in github for details.
+	 * It takes a while to understand quicksort.
 	 */
 	@Test
 	public void testquickSort() {
@@ -605,16 +606,78 @@ public class ThirdClass {
 		get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
 		set(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
 	 * 
+	 * 
+	 * O(1) get and set operation using hashMap
 	 */
 	
-	class LRUCache{
+	public class LRUCache {
+        class DoubleListNode {
+    		int key, val;
+    		DoubleListNode prev, next;
+    		DoubleListNode(int key, int val) {
+    		    this.prev = null;
+    		    this.next = null;
+    			this.key = key;
+    			this.val = val;
+    		}
+    	}
+	
+		DoubleListNode head = new DoubleListNode(-1, -1);
+		DoubleListNode tail = new DoubleListNode(-1, -1);
+		HashMap<Integer, DoubleListNode> dict;
+		private int capacity; 
+				
+		LRUCache(int capacity){
+			this.capacity= capacity;
+			dict = new HashMap();
+			head.next = tail;  //1.fixed a bug here, do not init head and tail pointers.
+			tail.prev = head;
+		}
+		
+		public int get(int key) {
+			if (!dict.containsKey(key)) {
+				return -1;
+			}
+			
+			DoubleListNode query = dict.get(key);
+			query.prev.next = query.next;
+			query.next.prev = query.prev;
+			
+			move_to_tail(query);
+			return query.val;
+		}
+		
+		public void set(int key, int value) {
+			if( get(key) != -1 ) {
+				dict.get(key).val = value;
+				return;   //2.fixed a bug here, do not return
+			}
+			
+			DoubleListNode newnode = new DoubleListNode(key, value);
+			if (capacity == dict.size()) {
+				DoubleListNode del = head.next;
+				head.next = del.next;
+				del.next.prev = head;
+				
+				dict.remove(del.key); //DoubleListNode must store both key and value, for delete operations
+			}
+			dict.put(key, newnode);
+			move_to_tail(newnode);
+		}
+		
+		private void move_to_tail(DoubleListNode node) {
+			tail.prev.next = node;
+			node.next = tail;
+			
+			node.prev = tail.prev;
+			tail.prev = node;
+		}
+			
+	}	  
 		
 		
 		
-		
-		
-		
-	}
+	
 	
 	
 	/**
@@ -1083,8 +1146,8 @@ public class ThirdClass {
     
     
     
-    
-	
+//-------------------------------------------------------------------------------------------------------------------
+//BST 的基本操作
 	
 	
 	/**
@@ -1198,7 +1261,42 @@ public class ThirdClass {
 		return root;
 	}
 	 
-	/**
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//----------------------------------------------------------------------------------------------------------------
+//	以下题为 Divide and Conquer 类型
+	
+	
+	
+	/** 
+	 * 
 	 * 11.0 Least Common Ancester(Divide And Conquer)
 	 * has a parent
 	 * 
@@ -1536,6 +1634,14 @@ public class ThirdClass {
      * We have twice choice to buy and sell,
      * how to earn the biggest money.
      * 
+     * 此问题分为两个子问题, 把0 - n 分两半，一次在左半部分买， 另一次在右半部分买。 Divide and Conquer
+     * 1.  1.0 solve the first time best buy from 0 to i.   use int[] to memorize the best 
+     *     1.1 solve the second time best buy from i to n.  use int[] to memorize the best
+     * 2. scan from 0 - n 
+     *  local = first + sec;
+     *  global = Math.max(local, global);
+     * 
+     * tips: how to solve one time best buy is in Best Time to Buy and Sell Stock I
      */
     
     public int maxProfit(int[] data) {
