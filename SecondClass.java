@@ -59,6 +59,9 @@ public class SecondClass {
 		return -1;
 	}
 	
+	
+	
+	
 	//1.1 Last Position Search
 	public int findLastPos(int[] num, int tar) {
 		if (num == null || num.length == 0) {
@@ -86,6 +89,8 @@ public class SecondClass {
 			return -1;
 		}
 	}
+	
+	
 	
 	
 	//2.0 find first bad version
@@ -413,6 +418,9 @@ public class SecondClass {
 	        return false;
 	    }
 	
+	 
+	 
+	 
 	
 	
 	 	/**
@@ -453,6 +461,10 @@ public class SecondClass {
 	 		return false;
 	 	}
 	 
+	 	
+	 	
+	 	
+	 	
 	 	/**
 	 	 * 8.0 search in Rotated Array leetcode question 
 	 	 * 
@@ -563,6 +575,7 @@ public class SecondClass {
 	 	
 	 	/**
 	 	 * 9. search for a range leetcode question
+	 	 * 
 	 	 *  81 / 81 test cases passed.
 			Status: Accepted
 			Runtime: 384 ms
@@ -641,6 +654,11 @@ public class SecondClass {
 	 		return -1;
 	 	}
 	 
+	 	
+	 	
+	 	
+	 	
+	 	
 	 	/**
 	 	 * 10. I love you -> uoy evol I -> you love I
 	 	 * three time reverse
@@ -685,6 +703,36 @@ public class SecondClass {
 	 		}
 	 		return String.copyValueOf(chars);
 	 	}
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+	 	
+//----------------------------------------------------------------------------------------------------------------------------------------
+//K Sum type Questions
+	 	
+	 	
 	 	
 	 	
 	 	
@@ -741,6 +789,7 @@ public class SecondClass {
 	 	 * 11.1   3 Sum
 	 	 * sort array,
 	 	 * binary search and skip duplicate
+	 	 * 3 Sum closest is similar to this question.
 	 	 */
 	 	/*
 	 	    Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
@@ -754,7 +803,51 @@ public class SecondClass {
 			    (-1, 0, 1)
 			    (-1, -1, 2)
 		*/
-
+	 	
+	 	
+	 	public List<List<Integer>> ThreeSum(int[] data, int tar) {
+	 		List res = new ArrayList();
+	 		if (data == null || data.length <= 2) {
+	 			return res;
+	 		}
+	 		Arrays.sort(data);
+	 		
+	 		for (int i = 0; i < data.length; i++) {
+	 			if (i > 0 && data[i] == data[i - 1] ) {
+	 				continue;
+	 			}
+	 			int start = i + 1;
+	 			int last = data.length - 1;
+	 			
+	 			while (start < last) {
+	 				int sum = data[i]  + data[start] + data[last];
+	 				if (sum == tar) {
+	 					List<Integer> tmp = new ArrayList();
+	 					tmp.add(data[i]);
+	 					tmp.add(data[start]);
+	 					tmp.add(data[last]);
+	 					res.add(tmp);
+	 					
+	 					start++;
+	 					last--;
+	 					while (start < last && data[start] == data[start - 1]) {
+	 						start ++;
+	 					}
+	 					while (start < last && data[last] == data[last + 1] ) {
+	 						last--;
+	 					}
+	 				} else if (sum < tar) {
+	 					start++;
+	 				} else {
+	 					last--;
+	 				}
+	 			}
+	 		}
+	 		return res;
+	 	}
+	 	
+	 	
+	 	
 	 	
 	 	/**
 	 	 * 11.2   4 Sum
@@ -773,4 +866,61 @@ public class SecondClass {
 			    (-2, -1, 1, 2)
 			    (-2,  0, 0, 2)
 	 	 */
+	 	
+	 	
+	 	
+	 	public List<List<Integer>> FourSum(int[] data, int tar) {
+	 		List res = new ArrayList();
+	 		if (data == null || data.length <= 3) {
+	 			return res;
+	 		}
+	 		Arrays.sort(data);
+	 		
+	 		for (int j = 0; j < data.length; j++) {
+	 			if (j > 0 && data[j] == data[j - 1]) {
+	 				continue;
+	 			}
+		 		for (int i = 0; i < data.length; i++) {
+		 			if (i > 0 && data[i] == data[i - 1] ) {
+		 				continue;
+		 			}
+		 			int start = i + 1;
+		 			int last = data.length - 1;
+		 			
+		 			while (start < last) {
+		 				int sum = data[j] + data[i]  + data[start] + data[last];
+		 				if (sum == tar) {
+		 					List<Integer> tmp = new ArrayList();
+		 					
+		 					tmp.add(data[j]);
+		 					tmp.add(data[i]);
+		 					tmp.add(data[start]);
+		 					tmp.add(data[last]);
+		 					res.add(tmp);
+		 					
+		 					start++;
+		 					last--;
+		 					while (start < last && data[start] == data[start - 1]) {
+		 						start ++;
+		 					}
+		 					while (start < last && data[last] == data[last + 1] ) {
+		 						last--;
+		 					}
+		 				} else if (sum < tar) {
+		 					start++;
+		 				} else {
+		 					last--;
+		 				}
+		 			}
+		 		}
+		 		
+		 	}
+	 		return res;
+	 	}
+	 	
+	 	
+	 	
+	 	
+	 	
 }
+
