@@ -54,8 +54,9 @@ public class ThirdClass {
 
 	//Tempate 2: Divide & Conquer
 
-	/*
-	public class Solution {
+	
+   class Solution1 {
+	   
 	    public ResultType traversal(TreeNode root) {
 	        // null or leaf
 	        if (root == null) {
@@ -69,9 +70,10 @@ public class ThirdClass {
 	        // Conquer
 	        ResultType result = Merge from left and right.
 	        return result;
+	    
 	    }
 	}
-	*/
+	
 	
 	
 	
@@ -166,6 +168,28 @@ public class ThirdClass {
 		res.addAll(right);
 		return res;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//-------------------------------------------------------------------------------------------------------------------
+//merge sort and quick sort
 	
 	/**
 	 * 2.0
@@ -415,6 +439,26 @@ public class ThirdClass {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 4. binary Tree Maximum path sum
 	 * 记住， 一个 Node can be 整条通路
@@ -460,7 +504,7 @@ public class ThirdClass {
     }
 	
 	/**
-	 * 5.0   return all the keys in the giveRange in BST
+	 * 5.0   return all the keys in the giveRange in BST    Divide and Conquer
 	 *      5
 	 *   3    7
 	 * 1  4  6  9
@@ -610,7 +654,8 @@ public class ThirdClass {
 	 * O(1) get and set operation using hashMap
 	 */
 	
-	public class LRUCache {
+	class LRUCache {
+		
         class DoubleListNode {
     		int key, val;
     		DoubleListNode prev, next;
@@ -677,6 +722,38 @@ public class ThirdClass {
 		
 		
 		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//-------------------------------------------------------------------------------------------------------------------
+//BFS
+	
+	
+	
 	
 	
 	
@@ -1141,6 +1218,21 @@ public class ThirdClass {
     		}
     	}
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
