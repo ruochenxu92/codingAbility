@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -118,7 +120,7 @@ public class FirstClass {
 	 * Main Topic: DFS
 		Subsets II
 		Subsets
-	    N-Queens II   					应该能看出url规律
+	    N-Queens II   					
 		N-Queens                        https://oj.leetcode.com/problems/n-queens/
 		Combinations					https://oj.leetcode.com/problems/combinations/
 		Combination Sum II
@@ -348,7 +350,7 @@ Submitted: 0 minutes ago
 	
 	
 	/**
-	 * generate Parenthesis
+	 * 7.0 generate Parenthesis
 	 * 
 	 * For example, given n = 3, a solution set is:
 		"((()))", "(()())", "(())()", "()(())", "()()()"
@@ -386,7 +388,7 @@ Submitted: 0 minutes ago
 	
     
     /**
-     * word break II
+     * 8.0 word break II
      * This is cannot pass the leetcode because of Time Limited Exceeded.
      * But this version should pass the 面试官. 
      * There are two ways to improve the performance:
@@ -442,10 +444,380 @@ Submitted: 0 minutes ago
     
     
     
-	
     
     
+    
+    /**
+     * 9.0 valid sudoku
+     * it is sub question for solve sudoku
+     */
+    
+    public boolean isValidSudoku(char[][] matrix) {
+        if (matrix == null || matrix.length != 9 || matrix[0].length != 9) {
+            return false;            
+        }
+        boolean[] visited = new boolean[9];
+        for (int i = 0; i < 9; i++) {
+            Arrays.fill(visited, false);
+            for (int col = 0; col < 9; col++) {
+                if (!process(visited, matrix[i][col])) {
+                	return false;
+                }
+            }
+        }
+        
+        for (int j = 0; j < 9; j++) {
+            Arrays.fill(visited, false);
+            for (int row = 0; row < 9; row++) {
+                if (!process(visited, matrix[row][j])){
+                	return false;
+                }
+            }
+        }
+        
+        for (int i = 0; i < 9; i += 3) {
+            for (int j = 0; j < 9; j += 3) {
+                Arrays.fill(visited, false);
+                for (int k = 0; k < 9; k++) {
+                    int x = k / 3;
+                    int y = k % 3;
+                    if (!process(visited, matrix[i + x][j + y])) {
+                    	return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    boolean process(boolean[] visited, char c) {
+    	if (c == '.') {
+    		return true;
+    	}
+    	
+    	int index = c - '1';
+    	if (visited[index]) {
+    		return false;
+    	}
+    	visited[index] = true;
+    	return true;
+    }
 	
+    
+    /**
+     * 9.1 solve the soduku
+     * This question is similar to N-queens.
+     */
+    
+    public void solveSudoku(char[][] board) {
+        solve(board, 0);
+    }
+    
+    boolean solve(char[][] matrix, int count) {
+        if (count == 9 * 9) {
+            return true;
+        }
+        int x = count / 9;
+        int y = count % 9;
+        if (matrix[x][y] != '.') {
+            return solve(matrix, count + 1);
+        }
+        
+        for (char k = '1'; k <= '9'; k++) {
+            matrix[x][y] = k;
+            if (isValid(matrix, x, y) && solve(matrix, count + 1)) {
+                return true;   // fix a bug here
+            }
+            matrix[x][y] = '.';
+        }
+        return false;
+    }
+    
+    boolean isValid(char[][] matrix, int x, int y) {
+        for (int i = 0; i < 9; i++) {
+            if (i != x && matrix[i][y] == matrix[x][y]) {
+                return false;
+            }
+        }   
+        for (int j = 0; j < 9; j++) {
+            if (j != y && matrix[x][j] == matrix[x][y]) {
+                return false;
+            }
+        }
+        int row = x / 3 * 3;
+        int col = y / 3 * 3;
+        for (int i = row; i < row + 3; i++) {
+            for (int j = col; j < col + 3; j++) {
+                if ( i != x && j != y && matrix[i][j] == matrix[x][y]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    
+    
+    /**
+     * 10.0 restore IP address
+     * 1. pos
+     * 2. StringBuffer sol
+     * 3. num < 256
+     * 4. 4 parts
+     */
+    
+    @Test
+    public void testrestoreIpAddress() {
+    	ArrayList<String> res = restoreIpAddresses("1111");
+    	assertEquals(Arrays.asList(new String[]{"1.1.1.1"}), res);
+    }
+    
+    
+    
+    public ArrayList<String> restoreIpAddresses(String s) {
+        ArrayList res = new ArrayList();
+        if (s == null || s.length() == 0) {
+            return res;
+        }
+        StringBuffer sol = new StringBuffer();
+        dfs(0, 4, s, sol, res);
+        return res;
+    }
+    //25525511211
+    void dfs(int pos, int count, String s, StringBuffer sol, ArrayList res) {
+        if (count == 0 && pos == s.length()) {
+            res.add(sol.toString());
+            return;
+        }
+        if (count == 0) {
+            return;
+        }
+        StringBuffer buf = new StringBuffer();
+        for (int i = pos; i < s.length(); i++) {
+            buf.append(s.charAt(i));
+            String tmp = buf.toString();
+            if (tmp.charAt(0) == '0' && tmp.length() > 1) {
+                return;
+            }
+            if (Integer.parseInt(tmp) < 256) {
+                int buflen = buf.length();
+                int sollen = sol.length();
+                if (i != s.length() - 1) {
+                    buf.append('.');
+                }
+                sol.append(buf);
+                dfs(i + 1, count - 1, s, sol, res);
+                buf.delete(buflen, buf.length());
+                sol.delete(sollen, sol.length());
+            }else {
+                return;
+            }
+        }
+    }
 	
+	/**
+	 * 11.0
+	 * Letter Combinations of a Phone Number
+	 * HashMap and DFS
+	 */
+    
+    
+    public List<String> letterCombinations(String num) {
+        HashMap<Integer,String> keyboard = new HashMap<Integer, String>();
+        keyboard.put(2,"abc");
+        keyboard.put(3,"def");
+        keyboard.put(4,"ghi");
+        keyboard.put(5,"jkl");
+        keyboard.put(6,"mno"); 
+        keyboard.put(7,"pqrs");
+        keyboard.put(8,"tuv");
+        keyboard.put(9,"wxyz");
+        List<String> res = new ArrayList();
+        StringBuffer sol = new StringBuffer(); 
+        dfs(0, num, keyboard, sol, res);
+        return res;
+    }
+    
+    private void dfs(int pos, String s, HashMap<Integer, String> dict, 
+                        StringBuffer sol, List<String> res){
+        if(pos == s.length()){
+            res.add(sol.toString());
+            return;
+        }          
+        
+        String tmp = dict.get(s.charAt(pos) - '0');
+        for(int i = 0; i < tmp.length(); i++){
+            sol.append(tmp.charAt(i));
+            dfs(pos + 1, s, dict, sol, res);
+            sol.deleteCharAt(sol.length() - 1);
+        }
+    }
+    
+    
+    
+    
+    /**
+     * 12.0
+     * Permutation && permutation II
+     * 1. boolean[] visited
+     * 2. skip dup by using i > 0 && num[i] == num[i - 1] && !visited[i]
+     * 3. Arrays.sort(num);
+     */
+    
+    @Test
+    public void testpermute() {
+    	int[] num = new int[]{1,2,3};
+    	ArrayList res = permute(num);
+    	System.out.println(res);
+    }
+    
+    public ArrayList permute(int[] num){
+        ArrayList res = new ArrayList();
+        if (num == null || num.length == 0) {
+            return res;
+        }
+        Arrays.sort(num);
+        boolean[] visited = new boolean[num.length];
+        ArrayList sol = new ArrayList();
+        dfs(num, sol, res, visited);
+        return res;
+    }
+    
+    void dfs(int[] num, ArrayList sol, ArrayList res, boolean[] visited) {
+        if (num.length == sol.size()) {
+            res.add(sol.clone());
+            return;
+        }
+        
+        for (int i = 0; i < num.length; i++) {
+            if (!visited[i]) {
+                if (i > 0 && num[i] == num[i - 1] && !visited[i - 1]) {
+                    continue;
+                }
+                visited[i] = true;
+                sol.add(num[i]);
+                dfs(num, sol, res, visited);
+                sol.remove(sol.size() - 1);
+                visited[i] = false;
+            }
+        }
+    }
+    
+    /**
+     * 13.0 Permutation Sequence
+     *  1 2 3 4
+     *  这题不是典型的排列组合， 是排列组合的变种，规律就在于Divide and Conquer
+     *  注意：不能重复使用数字， 用过了必须从list remove
+     *  Assume k = 20
+     *  index = k - 1;
+     *  3! = 6
+     *  0 - 5     1 开头
+     *  6 - 11    2 开头
+     *  12 - 17   3 开头
+     *  18 - 23   4 开头
+     *  
+     *  然后， 是2！= 2
+     *  第一次是在 4开头， list = [1 2 3] 
+     *  update index = index % 6 = 19 % 6 = 1
+     *  0 - 1     1st
+     *  2 - 3     2nd
+     *  4 - 5     3rd
+     *  
+     *  then, 1!
+     *  update index = index % 2 = 1
+     *  0
+     *  1
+     *  
+     *  then, 0!
+     *  update index = index % 1 = 0;
+     *  then 1st
+     */
+    
+    @Test
+    public void testgetPermutation() {
+    	String s = getPermutation(4, 24);
+    	assertEquals("4321", s);
+    }
+    
+    public String getPermutation(int n, int k){
+        if (n < 1 || k < 1) {
+            return "";
+        }
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < n; i++) {
+            list.add(i + 1);
+        }
+        StringBuffer sol = new StringBuffer();
+        int index = k - 1;
+        for (int i = n - 1; i >= 0; i--) {
+            int section = factorial(i);
+            int key = index / section;
+            sol.append(list.get(key));
+            index = index % section;
+        }
+        return sol.toString();
+    }
+    int factorial(int n) {
+        if (n == 0) {
+            return 1;
+        }
+        int res = 1;
+        for (int i = n; i >= 1; i--) {
+            res *= i;
+        }
+        return res;
+    }
 
+    
+    
+   
+    
+    
+   
+    /**
+     * 14. 0 nextPermutation is also permutation question, we need find the rule of Permutation
+     * 1234 -> 1243
+     * 1243 -> 1324
+     * 1324 -> 1342
+     * 1342 -> 1423
+     * 1423 -> 1432
+     * 1432 -> 2134
+     * 
+     * 1. from right to left find first num that violate the ascending rule, like in 1234, 3 > 4 is not ascending.
+     * mark the first num void the rule as partition.
+     * 2. from right to left find the first large num that greater than that one.
+     * 3. sort from partition to right.
+     * 
+     * Similar question, find prevPermutations
+     * @param num
+     */
+    
+    public void nextPermutation(int[] num) {
+	    if (num == null || num.length <= 1) {
+	        return;
+	    }	
+	    int partition = -1;
+	    for (int i = num.length - 2; i >= 0; i--) {
+	        if (num[i] < num[i + 1]) {   //change a little bit here can be find prevPermutation
+	            partition = i;
+	            break;
+	        }
+	    }
+	    
+	    if (partition == -1) {
+	        Arrays.sort(num);
+	        return;
+	    }
+	    
+	    for (int i = num.length - 1; i >= partition; i--) {
+	        if (num[i] > num[partition]) {
+	            int tmp = num[i];
+	            num[i] = num[partition];
+	            num[partition] = tmp;
+	            break;
+	        }
+	    }
+	    Arrays.sort(num, partition + 1, num.length);
+	}
 }
